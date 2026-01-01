@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const db = require("../config/database");
 
+
 // Halaman Utama - List Menfess
 router.get("/", async (req, res) => {
   try {
@@ -13,6 +14,11 @@ router.get("/", async (req, res) => {
     console.error(err);
     res.render("index", { messages: [], error: "Database connection failed!" });
   }
+});
+
+// Tambahkan ini sebelum module.exports
+router.get("/create", (req, res) => {
+    res.render("create"); 
 });
 
 // Handle Form Submission
