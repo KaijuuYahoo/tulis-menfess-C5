@@ -15,16 +15,10 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Halaman Create Menfess
-router.get("/create", (req, res) => {
-  res.render("create");
-});
-
 // Handle Form Submission
 router.post("/send", async (req, res) => {
   const { sender, content, color } = req.body;
   if (!sender || !content) return res.redirect("/create");
-
   try {
     await db.query(
       "INSERT INTO menfess (sender, content, color) VALUES (?, ?, ?)",
@@ -37,10 +31,28 @@ router.post("/send", async (req, res) => {
   }
 });
 
-// TODO: Tambahkan Route LIKE di sini
-// Clue: router.post('/like/:id', async (req, res) => { ... })
+// --- FITUR INTERAKTIF ---
 
-// TODO: Tambahkan Route DISLIKE di sini
-// Clue: Mirip like, tapi yang ditambah kolom dislikes
+// Route LIKE
+router.post('/like/:id', async (req, res) => {
+  try {
+    await db.query("UPDATE menfess SET likes = likes + 1 WHERE id = ?", [req.params.id]);
+    res.redirect("/");
+  } catch (err) {
+    console.error(err);
+    res.redirect("/");
+  }
+});
+
+// Route DISLIKE
+router.post('/dislike/:id', async (req, res) => {
+  try {
+    await db.query("UPDATE menfess SET dislikes = dislikes + 1 WHERE id = ?", [req.params.id]);
+    res.redirect("/");
+  } catch (err) {
+    console.error(err);
+    res.redirect("/");
+  }
+});
 
 module.exports = router;
